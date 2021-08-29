@@ -1,5 +1,5 @@
 import { BigInt } from "@graphprotocol/graph-ts";
-import { BadgeAward, BadgeDefinition, Metadata, Protocol, Winner } from "../generated/schema";
+import { BadgeAward, BadgeDefinition, DataItem, Protocol, Winner } from "../generated/schema";
 import { BADGE_DESCRIPTION, BADGE_NAME, PROTOCOL_NAME } from "./constants";
 
 export function awardTestnetWandererBadge(
@@ -76,13 +76,24 @@ export function provideProtocol(): Protocol {
 }
 
 
-export function addMetadata(badgeAward: BadgeAward, key: string, value: string): Metadata {
+export function addBadgeAwardDataItem(badgeAward: BadgeAward, key: string, value: string): DataItem {
   let id = badgeAward.id.concat("-").concat(key)
 
-  let metadata = new Metadata(id);
-  metadata.badgeAward = badgeAward.id;
-  metadata.key = key;
-  metadata.value = value;
-  metadata.save();
-  return metadata as Metadata;
+  let dataItem = new DataItem(id);
+  dataItem.badgeAward = badgeAward.id;
+  dataItem.key = key;
+  dataItem.value = value;
+  dataItem.save();
+  return dataItem as DataItem;
+}
+
+export function addBadgeDefinitionDataItem(badgeDefinition: BadgeDefinition, key: string, value: string): DataItem {
+  let id = badgeDefinition.id.concat("-").concat(key)
+
+  let dataItem = new DataItem(id);
+  dataItem.badgeDefinition = badgeDefinition.id;
+  dataItem.key = key;
+  dataItem.value = value;
+  dataItem.save();
+  return dataItem as DataItem;
 }

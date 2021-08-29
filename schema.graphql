@@ -29,7 +29,7 @@ type BadgeAward @entity {
   "Transaction when badge was awarded"
   transactionHash: String
   "Associated metadata"
-  metadata: [Metadata!]! @derivedFrom(field: "badgeAward")
+  dataItems: [DataItem!]! @derivedFrom(field: "badgeAward")
 }
 
 """
@@ -63,11 +63,12 @@ type Protocol @entity {
 }
 
 """
-Additional metadata to attach to the BadgeAward or to use as a flag
+Additional metadata to attach to a BadgeAward or BadgeDefinition
 """
-type Metadata @entity {
+type DataItem @entity {
   id: ID!
   badgeAward: BadgeAward
-  key: String
-  value: String
+  badgeDefinition: BadgeDefinition
+  key: String!
+  value: String!
 }

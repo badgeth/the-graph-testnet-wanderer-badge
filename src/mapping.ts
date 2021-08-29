@@ -1,60 +1,39 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { log } from "@graphprotocol/graph-ts"
 import {
-  Staking,
-  AdminUpdated,
-  ImplementationUpdated,
-  PendingImplementationUpdated
+  Signalled
+} from "../generated/Curation/Curation"
+import {
+  SubgraphPublished
+} from "../generated/GNS/GNS"
+import {
+  AllocationCreated, StakeDelegated
 } from "../generated/Staking/Staking"
-import { ExampleEntity } from "../generated/schema"
+import { addMetadata, awardTestnetWandererBadge } from "./models"
 
-export function handleAdminUpdated(event: AdminUpdated): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
-
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
-  if (entity == null) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
-  }
-
-  // BigInt and BigDecimal math are supported
-  entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
-  entity.oldAdmin = event.params.oldAdmin
-  entity.newAdmin = event.params.newAdmin
-
-  // Entities can be written to the store with `.save()`
-  entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.admin(...)
-  // - contract.implementation(...)
-  // - contract.pendingImplementation(...)
+export function handleSubgraphPublished(event: SubgraphPublished): void {
+  log.info("Subgraph Published", [])
+  let badgeAward = awardTestnetWandererBadge(event.params.graphAccount.toHexString(), event.block.number, event.transaction.hash.toHexString())
+  addMetadata(badgeAward, "role", "Developer")
+  addMetadata(badgeAward, "action", "Subgraph Published")
 }
 
-export function handleImplementationUpdated(
-  event: ImplementationUpdated
-): void {}
+export function handleStakeDelegated(event: StakeDelegated): void {
+  log.info("Stake Delegated", [])
+  let badgeAward = awardTestnetWandererBadge(event.params.delegator.toHexString(), event.block.number, event.transaction.hash.toHexString())
+  addMetadata(badgeAward, "role", "Delegator")
+  addMetadata(badgeAward, "action", "Stake Delegated")
+}
 
-export function handlePendingImplementationUpdated(
-  event: PendingImplementationUpdated
-): void {}
+export function handleAllocationCreated(event: AllocationCreated): void {
+  log.info("Allocation Created", [])
+  let badgeAward = awardTestnetWandererBadge(event.params.indexer.toHexString(), event.block.number, event.transaction.hash.toHexString())
+  addMetadata(badgeAward, "role", "Indexer")
+  addMetadata(badgeAward, "action", "Allocation Created")
+}
+
+export function handleSignalled(event: Signalled): void {
+  log.info("Subgraph Signalled", [])
+  let badgeAward = awardTestnetWandererBadge(event.params.curator.toHexString(), event.block.number, event.transaction.hash.toHexString())
+  addMetadata(badgeAward, "role", "Curator")
+  addMetadata(badgeAward, "action", "Subgraph Signalled")
+}

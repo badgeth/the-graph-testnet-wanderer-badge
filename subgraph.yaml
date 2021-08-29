@@ -1,0 +1,29 @@
+specVersion: 0.0.1
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum/contract
+    name: Staking
+    network: rinkeby
+    source:
+      address: "0x2d44C0e097F6cD0f514edAC633d82E01280B4A5c"
+      abi: Staking
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.2
+      language: wasm/assemblyscript
+      entities:
+        - AdminUpdated
+        - ImplementationUpdated
+        - PendingImplementationUpdated
+      abis:
+        - name: Staking
+          file: ./abis/Staking.json
+      eventHandlers:
+        - event: AdminUpdated(indexed address,indexed address)
+          handler: handleAdminUpdated
+        - event: ImplementationUpdated(indexed address,indexed address)
+          handler: handleImplementationUpdated
+        - event: PendingImplementationUpdated(indexed address,indexed address)
+          handler: handlePendingImplementationUpdated
+      file: ./src/mapping.ts

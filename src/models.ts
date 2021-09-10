@@ -6,7 +6,12 @@ import {
   Protocol,
   Winner,
 } from "../generated/schema";
-import { BADGE_DESCRIPTION, BADGE_NAME, PROTOCOL_NAME } from "./constants";
+import {
+  BADGE_DESCRIPTION,
+  BADGE_NAME,
+  BADGE_ROLE,
+  PROTOCOL_NAME,
+} from "./constants";
 
 export function awardTestnetWandererBadge(
   winnerAddress: string,
@@ -63,6 +68,7 @@ export function provideBadgeDefinition(): BadgeDefinition {
     badgeDefinition = new BadgeDefinition(BADGE_NAME);
     badgeDefinition.protocol = protocol.id;
     badgeDefinition.description = BADGE_DESCRIPTION;
+    badgeDefinition.protocolRole = BADGE_ROLE;
     badgeDefinition.image = "TBD";
     badgeDefinition.artist = "TBD";
     badgeDefinition.badgeCount = 0;

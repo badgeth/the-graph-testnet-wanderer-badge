@@ -13,7 +13,6 @@ export function handleSubgraphPublished(event: SubgraphPublished): void {
     event.params.graphAccount.toHexString(),
     event
   );
-  addBadgeAwardDataItem(badgeAward, "role", "Testnet Participant");
   addBadgeAwardDataItem(badgeAward, "action", "Subgraph Published");
 }
 
@@ -23,7 +22,6 @@ export function handleStakeDelegated(event: StakeDelegated): void {
     event.params.delegator.toHexString(),
     event
   );
-  addBadgeAwardDataItem(badgeAward, "role", "Testnet Participant");
   addBadgeAwardDataItem(badgeAward, "action", "Stake Delegated");
 }
 
@@ -33,7 +31,6 @@ export function handleAllocationCreated(event: AllocationCreated): void {
     event.params.indexer.toHexString(),
     event
   );
-  addBadgeAwardDataItem(badgeAward, "role", "Testnet Participant");
   addBadgeAwardDataItem(badgeAward, "action", "Allocation Created");
 }
 
@@ -43,6 +40,5 @@ export function handleSignalled(event: Signalled): void {
     event.params.curator.toHexString(),
     event
   );
-  addBadgeAwardDataItem(badgeAward, "role", "Testnet Participant");
   addBadgeAwardDataItem(badgeAward, "action", "Subgraph Signalled");
 }

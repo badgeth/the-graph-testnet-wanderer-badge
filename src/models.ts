@@ -1,11 +1,16 @@
-import { BigInt } from "@graphprotocol/graph-ts";
-import { BadgeAward, BadgeDefinition, DataItem, Protocol, Winner } from "../generated/schema";
+import { ethereum } from "@graphprotocol/graph-ts";
+import {
+  BadgeAward,
+  BadgeDefinition,
+  DataItem,
+  Protocol,
+  Winner,
+} from "../generated/schema";
 import { BADGE_DESCRIPTION, BADGE_NAME, PROTOCOL_NAME } from "./constants";
 
 export function awardTestnetWandererBadge(
   winnerAddress: string,
-  blockNumber: BigInt,
-  transactionHash: string
+  event: ethereum.Event
 ): BadgeAward {
   // Only 1 TestnetWandererBadge per User Allowed
   let badgeAward = BadgeAward.load(winnerAddress);
@@ -13,20 +18,25 @@ export function awardTestnetWandererBadge(
   if (badgeAward == null) {
     let winner = provideWinner(winnerAddress);
     winner.badgeCount = winner.badgeCount + 1;
-    winner.save()
+    winner.save();
 
     let badgeDefinition = provideBadgeDefinition();
 
     badgeDefinition.badgeCount = badgeDefinition.badgeCount + 1;
     badgeDefinition.save();
 
+    let blockAwarded = event.block.number;
+    let timestampAwarded = event.block.timestamp;
+    let transactionHash = event.transaction.hash.toHexString();
+
     badgeAward = new BadgeAward(winnerAddress);
     badgeAward.winner = winnerAddress;
     badgeAward.definition = badgeDefinition.id;
-    badgeAward.blockAwarded = blockNumber;
+    badgeAward.blockAwarded = blockAwarded;
+    badgeAward.timestampAwarded = timestampAwarded;
     badgeAward.globalBadgeNumber = badgeDefinition.badgeCount;
     badgeAward.winnerBadgeNumber = 1;
-    badgeAward.transactionHash = transactionHash
+    badgeAward.transactionHash = transactionHash;
     badgeAward.save();
   }
   return badgeAward as BadgeAward;
@@ -63,7 +73,6 @@ export function provideBadgeDefinition(): BadgeDefinition {
   return badgeDefinition as BadgeDefinition;
 }
 
-
 export function provideProtocol(): Protocol {
   let protocol = Protocol.load(PROTOCOL_NAME);
 
@@ -75,9 +84,12 @@ export function provideProtocol(): Protocol {
   return protocol as Protocol;
 }
 
-
-export function addBadgeAwardDataItem(badgeAward: BadgeAward, key: string, value: string): DataItem {
-  let id = badgeAward.id.concat("-").concat(key)
+export function addBadgeAwardDataItem(
+  badgeAward: BadgeAward,
+  key: string,
+  value: string
+): DataItem {
+  let id = badgeAward.id.concat("-").concat(key);
 
   let dataItem = new DataItem(id);
   dataItem.badgeAward = badgeAward.id;
@@ -87,8 +99,12 @@ export function addBadgeAwardDataItem(badgeAward: BadgeAward, key: string, value
   return dataItem as DataItem;
 }
 
-export function addBadgeDefinitionDataItem(badgeDefinition: BadgeDefinition, key: string, value: string): DataItem {
-  let id = badgeDefinition.id.concat("-").concat(key)
+export function addBadgeDefinitionDataItem(
+  badgeDefinition: BadgeDefinition,
+  key: string,
+  value: string
+): DataItem {
+  let id = badgeDefinition.id.concat("-").concat(key);
 
   let dataItem = new DataItem(id);
   dataItem.badgeDefinition = badgeDefinition.id;

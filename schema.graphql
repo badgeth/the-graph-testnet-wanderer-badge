@@ -20,6 +20,8 @@ type BadgeAward @entity {
   winner: Winner!
   "Block number in which badge was awarded"
   blockAwarded: BigInt!
+  "Timestamp in which badge was awarded"
+  timestampAwarded: BigInt!
   "Additional details about the badge"
   definition: BadgeDefinition!
   "Number in which the badge was awarded"

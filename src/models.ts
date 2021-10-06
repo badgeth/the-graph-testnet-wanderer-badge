@@ -7,6 +7,7 @@ import {
   Winner,
 } from "../generated/schema";
 import {
+  BADGE_ARTIST,
   BADGE_DESCRIPTION,
   BADGE_NAME,
   BADGE_ROLE,
@@ -70,7 +71,7 @@ export function provideBadgeDefinition(): BadgeDefinition {
     badgeDefinition.description = BADGE_DESCRIPTION;
     badgeDefinition.protocolRole = BADGE_ROLE;
     badgeDefinition.image = "TBD";
-    badgeDefinition.artist = "TBD";
+    badgeDefinition.artist = BADGE_ARTIST;
     badgeDefinition.badgeCount = 0;
 
     badgeDefinition.save();
